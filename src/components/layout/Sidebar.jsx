@@ -6,6 +6,7 @@ import {
   DocumentTextIcon,
   ArrowTrendingDownIcon,
   ArrowTrendingUpIcon,
+  ChartBarIcon,
   UsersIcon,
   BuildingLibraryIcon,
   TagIcon,
@@ -20,8 +21,9 @@ const links = [
   { to: '/spending', label: 'Spending', icon: BanknotesIcon },
   { to: '/incomes', label: 'Incomes', icon: ArrowTrendingUpIcon },
   { to: '/expenses', label: 'Expenses', icon: DocumentTextIcon },
-  { to: '/debts', label: 'Debts', icon: ArrowTrendingDownIcon },
-  { to: '/family', label: 'Family', icon: UsersIcon },
+  { to: '/debts',    label: 'Debts',   icon: ArrowTrendingDownIcon },
+  { to: '/report',   label: 'Report',  icon: ChartBarIcon },
+  { to: '/family',   label: 'Family',  icon: UsersIcon },
 ]
 
 const adminLinks = [

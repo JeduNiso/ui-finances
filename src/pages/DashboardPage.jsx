@@ -1,9 +1,11 @@
 import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import {
   CreditCardIcon,
   BanknotesIcon,
   DocumentTextIcon,
   ArrowTrendingDownIcon,
+  ChartBarIcon,
 } from '@heroicons/react/24/outline'
 import useDashboardStore from '../stores/dashboardStore'
 import StatCard from '../components/ui/StatCard'
@@ -49,7 +51,15 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-xl font-bold text-slate-800">Dashboard</h1>
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <h1 className="text-xl font-bold text-slate-800">Dashboard</h1>
+        <Link
+          to="/report"
+          className="flex items-center gap-2 text-sm text-indigo-600 hover:text-indigo-800 border border-indigo-200 hover:border-indigo-400 rounded-lg px-3 py-1.5 transition-colors"
+        >
+          <ChartBarIcon className="w-4 h-4" /> View Full Report
+        </Link>
+      </div>
 
       {/* Stat cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">

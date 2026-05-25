@@ -10,6 +10,7 @@ import SpendingPage from '../pages/SpendingPage'
 import ExpensesPage from '../pages/ExpensesPage'
 import DebtsPage from '../pages/DebtsPage'
 import IncomesPage from '../pages/IncomesPage'
+import ReportPage from '../pages/ReportPage'
 import FamilyPage from '../pages/FamilyPage'
 import BanksAdminPage from '../pages/BanksAdminPage'
 import CategoriesAdminPage from '../pages/CategoriesAdminPage'
@@ -31,6 +32,7 @@ const router = createBrowserRouter([
       { path: 'expenses', element: <ExpensesPage /> },
       { path: 'debts', element: <DebtsPage /> },
       { path: 'incomes', element: <IncomesPage /> },
+      { path: 'report', element: <ReportPage /> },
       { path: 'family', element: <FamilyPage /> },
       {
         path: 'admin/banks',
