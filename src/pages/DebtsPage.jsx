@@ -6,7 +6,6 @@ import DebtCard from '../components/debts/DebtCard'
 import DebtForm from '../components/debts/DebtForm'
 import PaymentForm from '../components/debts/PaymentForm'
 import ConfirmDialog from '../components/ui/ConfirmDialog'
-import { useCurrency } from '../hooks/useCurrency'
 import { formatMoney } from '../utils/formatMoney'
 
 export default function DebtsPage() {
