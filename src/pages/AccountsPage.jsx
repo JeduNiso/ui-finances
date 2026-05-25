@@ -2,16 +2,18 @@ import { useEffect, useState } from 'react'
 import { PlusIcon } from '@heroicons/react/24/outline'
 import useAccountsStore from '../stores/accountsStore'
 import { getBanks } from '../api/banks'
+import { getMembers } from '../api/family'
 import BalanceCard from '../components/ui/BalanceCard'
 import Modal from '../components/ui/Modal'
 import ConfirmDialog from '../components/ui/ConfirmDialog'
 import { CURRENCIES } from '../utils/formatMoney'
 
-const EMPTY = { account_number: '', currency: 'BOB', balance: '', bank_id: '' }
+const EMPTY = { account_number: '', currency: 'BOB', balance: '', bank_id: '', owner_id: '' }
 
 export default function AccountsPage() {
   const { data, isLoading, fetchAccounts, createAccount, updateAccount, deleteAccount } = useAccountsStore()
   const [banks, setBanks] = useState([])
+  const [members, setMembers] = useState([])
   const [modal, setModal] = useState(null) // null | { mode: 'create'|'edit', item? }
   const [confirm, setConfirm] = useState(null)
   const [form, setForm] = useState(EMPTY)
@@ -21,6 +23,7 @@ export default function AccountsPage() {
   useEffect(() => {
     fetchAccounts()
     getBanks().then((r) => setBanks(r.data)).catch(() => {})
+    getMembers().then((r) => setMembers(r.data)).catch(() => {})
   }, [])
 
   const openCreate = () => { setForm(EMPTY); setFormError(null); setModal({ mode: 'create' }) }
@@ -106,6 +109,15 @@ export default function AccountsPage() {
                 {banks.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
               </select>
             </div>
+            {modal.mode === 'create' && members.length > 0 && (
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-medium text-slate-600">Owner (family member)</label>
+                <select value={form.owner_id} onChange={handle('owner_id')} className="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                  <option value="">Me (default)</option>
+                  {members.map((m) => <option key={m.user.id} value={m.user.id}>{m.user.name}</option>)}
+                </select>
+              </div>
+            )}
             <div className="flex gap-3 justify-end mt-2">
               <button type="button" onClick={() => setModal(null)} className="px-4 py-2 text-sm border border-slate-200 rounded-lg hover:bg-slate-50">Cancel</button>
               <button type="submit" disabled={saving} className="px-4 py-2 text-sm bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg disabled:opacity-50">{saving ? 'Saving…' : 'Save'}</button>

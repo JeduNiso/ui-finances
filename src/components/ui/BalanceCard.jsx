@@ -1,3 +1,4 @@
+import { UserCircleIcon } from '@heroicons/react/24/outline'
 import { formatMoney } from '../../utils/formatMoney'
 
 export default function BalanceCard({ account }) {
@@ -19,6 +20,12 @@ export default function BalanceCard({ account }) {
       <p className="text-2xl font-bold text-slate-800">
         {formatMoney(account.balance ?? 0, account.currency ?? 'BOB')}
       </p>
+      {account.owner && (
+        <div className="flex items-center gap-1.5 mt-1">
+          <UserCircleIcon className="w-4 h-4 text-slate-400 shrink-0" />
+          <span className="text-xs text-slate-500 truncate">{account.owner.name}</span>
+        </div>
+      )}
     </div>
   )
 }
