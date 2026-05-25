@@ -72,7 +72,7 @@ export default function DebtForm({ initial, onSubmit, onClose, accounts = [], lo
             className="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
           >
             <option value="">Select account</option>
-            {accounts.map((a) => <option key={a.id} value={a.id}>{a.account_number}</option>)}
+            {accounts.map((a) => <option key={a.id} value={a.id}>{a.bank?.name ? `${a.bank.name} — ${a.account_number}` : a.account_number}</option>)}
           </select>
         </div>
 

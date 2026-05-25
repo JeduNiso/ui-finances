@@ -72,7 +72,7 @@ export default function IncomeForm({ initial, onSubmit, onClose, accounts = [], 
             <option value="">Select account</option>
             {accounts.map((a) => (
               <option key={a.id} value={a.id}>
-                {a.account_number}{a.bank?.name ? ` — ${a.bank.name}` : ''}
+                {a.bank?.name ? `${a.bank.name} — ` : ''}{a.account_number}
               </option>
             ))}
           </select>
