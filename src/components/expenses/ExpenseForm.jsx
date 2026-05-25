@@ -62,7 +62,7 @@ export default function ExpenseForm({ initial, onSubmit, onClose, categories = [
             className="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
           >
             <option value="">Select account</option>
-            {accounts.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
+            {accounts.map((a) => <option key={a.id} value={a.id}>{a.account_number}</option>)}
           </select>
         </div>
 

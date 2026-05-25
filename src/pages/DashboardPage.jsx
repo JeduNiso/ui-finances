@@ -9,11 +9,10 @@ import useDashboardStore from '../stores/dashboardStore'
 import StatCard from '../components/ui/StatCard'
 import SpendingDonut from '../components/charts/SpendingDonut'
 import MonthlyBarChart from '../components/charts/MonthlyBarChart'
-import { useCurrency } from '../hooks/useCurrency'
+import { formatMoney } from '../utils/formatMoney'
 
 export default function DashboardPage() {
   const { data, isLoading, fetch } = useDashboardStore()
-  const { format } = useCurrency()
 
   useEffect(() => { fetch() }, [])
 
@@ -23,14 +22,14 @@ export default function DashboardPage() {
 
   const stats = [
     {
-      title: 'Total Balance',
-      value: format(data?.total_balance ?? 0),
+      title: 'Total Balance (BOB)',
+      value: formatMoney(data?.total_balance ?? 0, 'BOB'),
       icon: CreditCardIcon,
       colorClass: 'text-indigo-600',
     },
     {
-      title: 'Monthly Spending',
-      value: format(data?.monthly_spending ?? 0),
+      title: 'Monthly Spending (BOB)',
+      value: formatMoney(data?.monthly_spending ?? 0, 'BOB'),
       icon: BanknotesIcon,
       colorClass: 'text-amber-500',
     },

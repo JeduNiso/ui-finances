@@ -7,11 +7,11 @@ import DebtForm from '../components/debts/DebtForm'
 import PaymentForm from '../components/debts/PaymentForm'
 import ConfirmDialog from '../components/ui/ConfirmDialog'
 import { useCurrency } from '../hooks/useCurrency'
+import { formatMoney } from '../utils/formatMoney'
 
 export default function DebtsPage() {
   const { data, summary, isLoading, fetchDebts, fetchSummary, createDebt, updateDebt, deleteDebt, addPayment } = useDebtsStore()
   const { data: accounts, fetchAccounts } = useAccountsStore()
-  const { format } = useCurrency()
   const [form, setForm] = useState(null)
   const [payTarget, setPayTarget] = useState(null)
   const [confirm, setConfirm] = useState(null)
@@ -64,7 +64,7 @@ export default function DebtsPage() {
           {[['Total Owed', summary.total_owed], ['Total Paid', summary.total_paid], ['Active Debts', summary.active_count]].map(([label, val]) => (
             <div key={label} className="bg-white rounded-xl border border-slate-100 shadow-sm p-4">
               <p className="text-xs text-slate-500">{label}</p>
-              <p className="text-xl font-bold text-slate-800 mt-1">{typeof val === 'number' && val < 1000 && Number.isInteger(val) ? val : format(val ?? 0)}</p>
+              <p className="text-xl font-bold text-slate-800 mt-1">{typeof val === 'number' && val < 1000 && Number.isInteger(val) ? val : formatMoney(val ?? 0, 'BOB')}</p>
             </div>
           ))}
         </div>

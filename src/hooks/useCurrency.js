@@ -1,22 +1,10 @@
-import { useMemo } from 'react'
+import { formatMoney } from '../utils/formatMoney'
 
 /**
- * Returns a currency formatter using the browser locale.
- * @param {string} currency - ISO 4217 code, defaults to 'USD'
+ * Returns a currency formatter. Currency defaults to 'BOB'.
+ * @param {string} currency - 'BOB' or 'USD'
  */
-export function useCurrency(currency = 'USD') {
-  const formatter = useMemo(
-    () =>
-      new Intl.NumberFormat(undefined, {
-        style: 'currency',
-        currency,
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }),
-    [currency],
-  )
-
-  const format = (value) => formatter.format(Number(value))
-
+export function useCurrency(currency = 'BOB') {
+  const format = (value) => formatMoney(value, currency)
   return { format }
 }

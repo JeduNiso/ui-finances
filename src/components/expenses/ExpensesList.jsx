@@ -1,9 +1,8 @@
 import dayjs from 'dayjs'
 import { CheckCircleIcon, ClockIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
-import { useCurrency } from '../../hooks/useCurrency'
+import { formatMoney } from '../../utils/formatMoney'
 
 export default function ExpensesList({ items = [], onPay, onEdit, onDelete }) {
-  const { format } = useCurrency()
 
   if (!items.length) {
     return <div className="text-center py-12 text-slate-400 text-sm">No expenses found</div>
@@ -36,7 +35,7 @@ export default function ExpensesList({ items = [], onPay, onEdit, onDelete }) {
             </div>
 
             <div className="text-right shrink-0">
-              <p className="font-semibold text-slate-800">{format(item.amount)}</p>
+              <p className="font-semibold text-slate-800">{formatMoney(item.amount, item.account?.currency)}</p>
               {item.next_due_date && (
                 <p className="text-xs text-slate-400">
                   Due {dayjs(item.next_due_date).format('MMM D')}

@@ -1,4 +1,4 @@
-import { useCurrency } from '../../hooks/useCurrency'
+import { formatMoney } from '../../utils/formatMoney'
 
 const STATUS_COLORS = {
   active: 'bg-amber-100 text-amber-700',
@@ -7,7 +7,7 @@ const STATUS_COLORS = {
 }
 
 export default function DebtCard({ debt, onPay, onEdit, onDelete }) {
-  const { format } = useCurrency()
+  const cur = debt.account?.currency ?? 'BOB'
   const original = Number(debt.original_amount ?? 0)
   const current = Number(debt.current_balance ?? 0)
   const pct = original > 0 ? Math.min(100, ((original - current) / original) * 100) : 0
@@ -32,13 +32,13 @@ export default function DebtCard({ debt, onPay, onEdit, onDelete }) {
 
       <div>
         <div className="flex justify-between text-xs text-slate-500 mb-1">
-          <span>Remaining: {format(current)}</span>
+          <span>Remaining: {formatMoney(current, cur)}</span>
           <span>{pct.toFixed(0)}% paid</span>
         </div>
         <div className="w-full bg-slate-100 rounded-full h-2">
           <div className="bg-indigo-500 h-2 rounded-full transition-all" style={{ width: `${pct}%` }} />
         </div>
-        <p className="text-xs text-slate-400 mt-1">Original: {format(original)}</p>
+        <p className="text-xs text-slate-400 mt-1">Original: {formatMoney(original, cur)}</p>
       </div>
 
       <div className="flex gap-2">

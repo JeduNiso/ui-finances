@@ -5,8 +5,9 @@ import { getBanks } from '../api/banks'
 import BalanceCard from '../components/ui/BalanceCard'
 import Modal from '../components/ui/Modal'
 import ConfirmDialog from '../components/ui/ConfirmDialog'
+import { CURRENCIES } from '../utils/formatMoney'
 
-const EMPTY = { account_number: '', balance: '', bank_id: '' }
+const EMPTY = { account_number: '', currency: 'BOB', balance: '', bank_id: '' }
 
 export default function AccountsPage() {
   const { data, isLoading, fetchAccounts, createAccount, updateAccount, deleteAccount } = useAccountsStore()
@@ -23,7 +24,7 @@ export default function AccountsPage() {
   }, [])
 
   const openCreate = () => { setForm(EMPTY); setFormError(null); setModal({ mode: 'create' }) }
-  const openEdit = (item) => { setForm({ account_number: item.account_number ?? '', balance: item.balance ?? '', bank_id: item.bank?.id ?? '' }); setFormError(null); setModal({ mode: 'edit', item }) }
+  const openEdit = (item) => { setForm({ account_number: item.account_number ?? '', currency: item.currency ?? 'BOB', balance: item.balance ?? '', bank_id: item.bank?.id ?? '' }); setFormError(null); setModal({ mode: 'edit', item }) }
 
   const handle = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }))
 
@@ -86,9 +87,17 @@ export default function AccountsPage() {
               <label className="text-xs font-medium text-slate-600">Account number *</label>
               <input required value={form.account_number} onChange={handle('account_number')} placeholder="e.g. 0012-3456-7890" className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300" />
             </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-xs font-medium text-slate-600">Initial balance</label>
-              <input type="number" step="0.01" min="0" value={form.balance} onChange={handle('balance')} placeholder="0.00" className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+            <div className="flex gap-3">
+              <div className="flex flex-col gap-1 flex-1">
+                <label className="text-xs font-medium text-slate-600">Currency *</label>
+                <select required value={form.currency} onChange={handle('currency')} className="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                  {CURRENCIES.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+              <div className="flex flex-col gap-1 flex-1">
+                <label className="text-xs font-medium text-slate-600">Initial balance</label>
+                <input type="number" step="0.01" min="0" value={form.balance} onChange={handle('balance')} placeholder="0.00" className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+              </div>
             </div>
             <div className="flex flex-col gap-1">
               <label className="text-xs font-medium text-slate-600">Bank</label>

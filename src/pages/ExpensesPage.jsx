@@ -116,7 +116,7 @@ export default function ExpensesPage() {
               <label className="text-xs font-medium text-slate-600">Account</label>
               <select value={payForm.account_id} onChange={(e) => setPayForm((f) => ({ ...f, account_id: e.target.value }))} className="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300">
                 <option value="">Select account</option>
-                {accounts.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
+                {accounts.map((a) => <option key={a.id} value={a.id}>{a.account_number} ({a.currency ?? 'BOB'})</option>)}
               </select>
             </div>
             <div className="flex gap-3 justify-end mt-2">

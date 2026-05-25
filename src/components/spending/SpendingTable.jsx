@@ -1,9 +1,8 @@
 import dayjs from 'dayjs'
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
-import { useCurrency } from '../../hooks/useCurrency'
+import { formatMoney } from '../../utils/formatMoney'
 
 export default function SpendingTable({ items = [], onEdit, onDelete }) {
-  const { format } = useCurrency()
 
   if (!items.length) {
     return (
@@ -32,9 +31,9 @@ export default function SpendingTable({ items = [], onEdit, onDelete }) {
               </td>
               <td className="px-4 py-3 text-slate-800">{item.description}</td>
               <td className="px-4 py-3 text-slate-500">{item.category?.name ?? '—'}</td>
-              <td className="px-4 py-3 text-slate-500">{item.account?.name ?? '—'}</td>
+              <td className="px-4 py-3 text-slate-500">{item.account?.account_number ?? '—'}</td>
               <td className="px-4 py-3 text-right font-semibold text-slate-800">
-                {format(item.amount)}
+                <span>{formatMoney(item.amount, item.account?.currency)}</span>
               </td>
               <td className="px-4 py-3">
                 <div className="flex items-center gap-1 justify-end">

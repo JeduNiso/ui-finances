@@ -21,7 +21,7 @@ export default function SpendingFilters({ filters, onChange, categories = [], ac
       >
         <option value="">All accounts</option>
         {accounts.map((a) => (
-          <option key={a.id} value={a.id}>{a.name}</option>
+          <option key={a.id} value={a.id}>{a.account_number} ({a.currency ?? 'BOB'})</option>
         ))}
       </select>
 
