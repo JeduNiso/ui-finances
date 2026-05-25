@@ -30,14 +30,17 @@ export default function SpendingPage() {
     try {
       if (payload.id) await updateSpending(payload.id, payload)
       else await createSpending(payload)
-      await fetchSpendings(filters)
+      await Promise.all([fetchSpendings(filters), fetchAccounts()])
       setForm(null)
     } finally { setSaving(false) }
   }
 
   const confirmDelete = async () => {
     setSaving(true)
-    try { await deleteSpending(confirm.id) } catch { /* ignore */ }
+    try {
+      await deleteSpending(confirm.id)
+      await fetchAccounts()
+    } catch { /* ignore */ }
     setSaving(false)
     setConfirm(null)
   }
