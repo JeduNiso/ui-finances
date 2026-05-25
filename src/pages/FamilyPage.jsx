@@ -98,8 +98,8 @@ export default function FamilyPage() {
               <li key={m.id} className="flex items-center gap-3">
                 <UserCircleIcon className="w-8 h-8 text-slate-300 shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-slate-800 truncate">{m.name ?? m.email}</p>
-                  <p className="text-xs text-slate-400 truncate">{m.email}</p>
+                  <p className="text-sm font-medium text-slate-800 truncate">{m.user?.name ?? m.user?.email ?? '—'}</p>
+                  <p className="text-xs text-slate-400 truncate">{m.user?.email}</p>
                 </div>
                 <span
                   className={`text-xs px-2 py-0.5 rounded-full font-medium capitalize ${
@@ -109,7 +109,7 @@ export default function FamilyPage() {
                   {m.role ?? 'member'}
                 </span>
                 <button
-                  onClick={() => handleRemove(m.id)}
+                  onClick={() => handleRemove(m.user?.id)}
                   className="p-1.5 rounded hover:bg-red-50 text-slate-400 hover:text-red-600 transition-colors"
                   title="Remove member"
                 >
