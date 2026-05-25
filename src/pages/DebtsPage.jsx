@@ -59,13 +59,45 @@ export default function DebtsPage() {
       </div>
 
       {summary && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          {[['Total Owed', summary.total_owed], ['Total Paid', summary.total_paid], ['Active Debts', summary.active_count]].map(([label, val]) => (
-            <div key={label} className="bg-white rounded-xl border border-slate-100 shadow-sm p-4">
-              <p className="text-xs text-slate-500">{label}</p>
-              <p className="text-xl font-bold text-slate-800 mt-1">{typeof val === 'number' && val < 1000 && Number.isInteger(val) ? val : formatMoney(val ?? 0, 'BOB')}</p>
+        <div className="flex flex-col gap-3">
+          {/* Per-currency breakdown */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {Number(summary.bob?.owed) > 0 || Number(summary.bob?.paid) > 0 ? (
+              <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-4">
+                <span className="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">BOB</span>
+                <div className="grid grid-cols-2 gap-3 mt-3">
+                  <div><p className="text-xs text-slate-500">Owed</p><p className="text-base font-bold text-slate-800">{formatMoney(summary.bob.owed, 'BOB')}</p></div>
+                  <div><p className="text-xs text-slate-500">Paid</p><p className="text-base font-bold text-green-600">{formatMoney(summary.bob.paid, 'BOB')}</p></div>
+                </div>
+              </div>
+            ) : null}
+            {Number(summary.usd?.owed) > 0 || Number(summary.usd?.paid) > 0 ? (
+              <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-4">
+                <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">USD</span>
+                <div className="grid grid-cols-2 gap-3 mt-3">
+                  <div><p className="text-xs text-slate-500">Owed</p><p className="text-base font-bold text-slate-800">{formatMoney(summary.usd.owed, 'USD')}</p></div>
+                  <div><p className="text-xs text-slate-500">Paid</p><p className="text-base font-bold text-green-600">{formatMoney(summary.usd.paid, 'USD')}</p></div>
+                </div>
+              </div>
+            ) : null}
+          </div>
+          {/* Grand total in BOB + active count */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-4">
+              <p className="text-xs text-slate-500">Total Owed (BOB)</p>
+              <p className="text-lg font-bold text-slate-800 mt-1">{formatMoney(summary.total_owed_bob ?? 0, 'BOB')}</p>
+              <p className="text-xs text-slate-400 mt-0.5">USD × 9.97</p>
             </div>
-          ))}
+            <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-4">
+              <p className="text-xs text-slate-500">Total Paid (BOB)</p>
+              <p className="text-lg font-bold text-green-600 mt-1">{formatMoney(summary.total_paid_bob ?? 0, 'BOB')}</p>
+              <p className="text-xs text-slate-400 mt-0.5">USD × 9.97</p>
+            </div>
+            <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-4 col-span-2 sm:col-span-1">
+              <p className="text-xs text-slate-500">Active Debts</p>
+              <p className="text-lg font-bold text-slate-800 mt-1">{summary.active_count ?? 0}</p>
+            </div>
+          </div>
         </div>
       )}
 
