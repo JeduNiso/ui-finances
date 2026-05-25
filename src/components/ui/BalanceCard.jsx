@@ -6,7 +6,7 @@ export default function BalanceCard({ account }) {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-5 flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-slate-500 truncate">{account.name}</span>
+        <span className="text-sm font-medium text-slate-500 truncate">{account.account_number}</span>
         {account.bank && (
           <span className="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
             {account.bank.name}

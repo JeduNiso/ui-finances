@@ -6,8 +6,7 @@ import BalanceCard from '../components/ui/BalanceCard'
 import Modal from '../components/ui/Modal'
 import ConfirmDialog from '../components/ui/ConfirmDialog'
 
-const EMPTY = { name: '', account_type: '', balance: '', bank_id: '' }
-const TYPES = ['checking', 'savings', 'credit', 'investment', 'cash']
+const EMPTY = { account_number: '', balance: '', bank_id: '' }
 
 export default function AccountsPage() {
   const { data, isLoading, fetchAccounts, createAccount, updateAccount, deleteAccount } = useAccountsStore()
@@ -16,14 +15,15 @@ export default function AccountsPage() {
   const [confirm, setConfirm] = useState(null)
   const [form, setForm] = useState(EMPTY)
   const [saving, setSaving] = useState(false)
+  const [formError, setFormError] = useState(null)
 
   useEffect(() => {
     fetchAccounts()
     getBanks().then((r) => setBanks(r.data)).catch(() => {})
   }, [])
 
-  const openCreate = () => { setForm(EMPTY); setModal({ mode: 'create' }) }
-  const openEdit = (item) => { setForm({ name: item.name, account_type: item.account_type ?? '', balance: item.balance ?? '', bank_id: item.bank?.id ?? '' }); setModal({ mode: 'edit', item }) }
+  const openCreate = () => { setForm(EMPTY); setFormError(null); setModal({ mode: 'create' }) }
+  const openEdit = (item) => { setForm({ account_number: item.account_number ?? '', balance: item.balance ?? '', bank_id: item.bank?.id ?? '' }); setFormError(null); setModal({ mode: 'edit', item }) }
 
   const handle = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }))
 
@@ -34,7 +34,9 @@ export default function AccountsPage() {
       if (modal.mode === 'create') await createAccount(form)
       else await updateAccount(modal.item.id, form)
       setModal(null)
-    } catch { /* errors shown by store */ }
+    } catch (e) {
+      setFormError(e.response?.data?.message ?? e.response?.data?.detail ?? 'Something went wrong.')
+    }
     finally { setSaving(false) }
   }
 
@@ -77,20 +79,16 @@ export default function AccountsPage() {
       {modal && (
         <Modal title={modal.mode === 'create' ? 'New Account' : 'Edit Account'} onClose={() => setModal(null)}>
           <form onSubmit={submit} className="flex flex-col gap-4">
+            {formError && (
+              <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{formError}</p>
+            )}
             <div className="flex flex-col gap-1">
-              <label className="text-xs font-medium text-slate-600">Name *</label>
-              <input required value={form.name} onChange={handle('name')} className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+              <label className="text-xs font-medium text-slate-600">Account number *</label>
+              <input required value={form.account_number} onChange={handle('account_number')} placeholder="e.g. 0012-3456-7890" className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300" />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs font-medium text-slate-600">Type</label>
-              <select value={form.account_type} onChange={handle('account_type')} className="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300">
-                <option value="">Select type</option>
-                {TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
-              </select>
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-xs font-medium text-slate-600">Balance</label>
-              <input type="number" step="0.01" value={form.balance} onChange={handle('balance')} className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+              <label className="text-xs font-medium text-slate-600">Initial balance</label>
+              <input type="number" step="0.01" min="0" value={form.balance} onChange={handle('balance')} placeholder="0.00" className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300" />
             </div>
             <div className="flex flex-col gap-1">
               <label className="text-xs font-medium text-slate-600">Bank</label>
@@ -109,7 +107,7 @@ export default function AccountsPage() {
 
       {confirm && (
         <ConfirmDialog
-          message={`Delete account "${confirm.name}"? This cannot be undone.`}
+          message={`Delete account "${confirm.account_number}"? This cannot be undone.`}
           onConfirm={confirmDelete}
           onCancel={() => setConfirm(null)}
           loading={saving}
