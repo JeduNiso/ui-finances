@@ -14,9 +14,10 @@ const useAuthStore = create(
 
       login: async (credentials) => {
         const { data } = await authApi.login(credentials)
-        localStorage.setItem('access_token', data.access)
+        const access = data.token ?? data.access
+        localStorage.setItem('access_token', access)
         localStorage.setItem('refresh_token', data.refresh)
-        set({ token: data.access, refreshToken: data.refresh, user: data.user ?? null })
+        set({ token: access, refreshToken: data.refresh, user: data.user ?? null })
         return data
       },
 

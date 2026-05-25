@@ -22,8 +22,9 @@ client.interceptors.response.use(
       if (refresh) {
         try {
           const { data } = await axios.post(`${BASE}/auth/token/refresh`, { refresh })
-          localStorage.setItem('access_token', data.access)
-          original.headers.Authorization = `Bearer ${data.access}`
+          const newAccess = data.token ?? data.access
+          localStorage.setItem('access_token', newAccess)
+          original.headers.Authorization = `Bearer ${newAccess}`
           return client(original)
         } catch {
           localStorage.removeItem('access_token')
