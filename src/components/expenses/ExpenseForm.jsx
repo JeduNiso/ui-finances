@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import Modal from '../ui/Modal'
+import { formatMoney } from '../../utils/formatMoney'
 
 const FREQUENCIES = ['monthly', 'biweekly', 'weekly', 'yearly', 'one-time']
-const EMPTY = { name: '', amount: '', day_of_month: '', frequency: 'monthly', account_id: '', category_id: '' }
+const EMPTY = { name: '', amount: '', day_of_month: '', frequency: 'monthly', account_id: '', category_id: '', debt_id: '' }
 
-export default function ExpenseForm({ initial, onSubmit, onClose, categories = [], accounts = [], loading }) {
+export default function ExpenseForm({ initial, onSubmit, onClose, categories = [], accounts = [], debts = [], loading }) {
   const [form, setForm] = useState({ ...EMPTY, ...initial })
   const [error, setError] = useState(null)
 
@@ -20,6 +21,8 @@ export default function ExpenseForm({ initial, onSubmit, onClose, categories = [
       setError(err.response?.data?.message ?? 'An error occurred')
     }
   }
+
+  const activeDebts = debts.filter((d) => d.status === 'active')
 
   return (
     <Modal title={initial?.id ? 'Edit Expense' : 'New Expense'} onClose={onClose}>
@@ -77,6 +80,26 @@ export default function ExpenseForm({ initial, onSubmit, onClose, categories = [
             {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
+
+        {activeDebts.length > 0 && (
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-slate-600">
+              Link to Debt <span className="text-slate-400 font-normal">(optional — payments will reduce debt balance)</span>
+            </label>
+            <select
+              value={form.debt_id}
+              onChange={handle('debt_id')}
+              className="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            >
+              <option value="">No debt linked</option>
+              {activeDebts.map((d) => (
+                <option key={d.id} value={d.id}>
+                  {d.creditor} — {formatMoney(d.current_balance, d.account?.currency ?? 'BOB')} remaining
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         <div className="flex gap-3 justify-end mt-2">
           <button type="button" onClick={onClose} className="px-4 py-2 text-sm border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors">Cancel</button>

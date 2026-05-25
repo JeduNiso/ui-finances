@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { PlusIcon, CalendarIcon, ListBulletIcon } from '@heroicons/react/24/outline'
 import useExpensesStore from '../stores/expensesStore'
 import useAccountsStore from '../stores/accountsStore'
+import useDebtsStore from '../stores/debtsStore'
 import { getCategories } from '../api/categories'
 import ExpensesList from '../components/expenses/ExpensesList'
 import ExpenseForm from '../components/expenses/ExpenseForm'
@@ -14,6 +15,7 @@ const PAY_EMPTY = { amount: '', paid_at: '', account_id: '' }
 export default function ExpensesPage() {
   const { data, calendar, isLoading, fetchExpenses, fetchCalendar, createExpense, updateExpense, deleteExpense, pay } = useExpensesStore()
   const { data: accounts, fetchAccounts } = useAccountsStore()
+  const { data: debts, fetchDebts } = useDebtsStore()
   const [categories, setCategories] = useState([])
   const [view, setView] = useState('list') // 'list' | 'calendar'
   const [form, setForm] = useState(null)
@@ -26,6 +28,7 @@ export default function ExpensesPage() {
     fetchExpenses()
     fetchCalendar()
     fetchAccounts()
+    fetchDebts()
     getCategories().then((r) => setCategories(r.data)).catch(() => {})
   }, [])
 
@@ -97,6 +100,7 @@ export default function ExpensesPage() {
           onClose={() => setForm(null)}
           categories={categories}
           accounts={accounts}
+          debts={debts}
           loading={saving}
         />
       )}
