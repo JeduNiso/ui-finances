@@ -22,16 +22,21 @@ export default function DashboardPage() {
     return <div className="flex items-center justify-center h-64 text-slate-400">Loading…</div>
   }
 
+  const usdSub = (obj) =>
+    obj?.USD ? formatMoney(obj.USD, 'USD') : null
+
   const stats = [
     {
-      title: 'Total Balance (BOB)',
-      value: formatMoney(data?.total_balance ?? 0, 'BOB'),
+      title: 'Total Balance',
+      value: formatMoney(data?.balance_by_currency?.BOB ?? 0, 'BOB'),
+      sub: usdSub(data?.balance_by_currency),
       icon: CreditCardIcon,
       colorClass: 'text-indigo-600',
     },
     {
-      title: 'Monthly Spending (BOB)',
-      value: formatMoney(data?.monthly_spending ?? 0, 'BOB'),
+      title: 'Monthly Spending',
+      value: formatMoney(data?.spending_by_currency?.BOB ?? 0, 'BOB'),
+      sub: usdSub(data?.spending_by_currency),
       icon: BanknotesIcon,
       colorClass: 'text-amber-500',
     },
