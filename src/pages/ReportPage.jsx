@@ -70,6 +70,14 @@ export default function ReportPage() {
   const hasFilters = selTypes.length > 0 || selCats.length > 0 ||
     dateFrom !== MONTH_START || dateTo !== TODAY
 
+  // ── Totals by currency from visible transactions ─────────────────────────
+  const visibleTotals = transactions.reduce((acc, tx) => {
+    const cur = tx.currency ?? 'BOB'
+    const signed = tx.type === 'income' ? parseFloat(tx.amount) : -parseFloat(tx.amount)
+    acc[cur] = (acc[cur] ?? 0) + signed
+    return acc
+  }, {})
+
   // ── Render ──────────────────────────────────────────────────────────────────
   const s = summary
 
@@ -267,6 +275,32 @@ export default function ReportPage() {
                 )
               })}
             </tbody>
+            {Object.keys(visibleTotals).length > 0 && (
+              <tfoot className="border-t-2 border-slate-200 bg-slate-50">
+                <tr>
+                  <td colSpan={6} className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                    Totals shown
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <div className="flex flex-col items-end gap-1">
+                      {['BOB', 'USD'].filter((c) => visibleTotals[c] !== undefined).map((c) => {
+                        const val = visibleTotals[c]
+                        return (
+                          <span
+                            key={c}
+                            className={`font-bold text-sm whitespace-nowrap ${
+                              val >= 0 ? 'text-emerald-600' : 'text-red-500'
+                            }`}
+                          >
+                            {val >= 0 ? '+' : '−'}{formatMoney(Math.abs(val), c)}
+                          </span>
+                        )
+                      })}
+                    </div>
+                  </td>
+                </tr>
+              </tfoot>
+            )}
           </table>
         </div>
       )}
