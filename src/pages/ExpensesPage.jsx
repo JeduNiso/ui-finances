@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { PlusIcon, CalendarIcon, ListBulletIcon } from '@heroicons/react/24/outline'
+import { formatMoney } from '../utils/formatMoney'
 import useExpensesStore from '../stores/expensesStore'
 import useAccountsStore from '../stores/accountsStore'
 import useDebtsStore from '../stores/debtsStore'
@@ -83,12 +84,31 @@ export default function ExpensesPage() {
       {isLoading && !data.length ? (
         <div className="text-center py-12 text-slate-400">Loading…</div>
       ) : view === 'list' ? (
-        <ExpensesList
-          items={data}
-          onPay={(item) => setPayTarget(item)}
-          onEdit={(item) => setForm(item)}
-          onDelete={(item) => setConfirm(item)}
-        />
+        <>
+          {data.length > 0 && (() => {
+            const totals = data.reduce((acc, item) => {
+              const cur = item.account?.currency ?? 'BOB'
+              acc[cur] = (acc[cur] ?? 0) + parseFloat(item.amount ?? 0)
+              return acc
+            }, {})
+            return (
+              <div className="flex flex-wrap gap-3">
+                {['BOB', 'USD'].filter((c) => totals[c]).map((c) => (
+                  <div key={c} className="bg-white rounded-xl border border-slate-100 px-5 py-3 flex flex-col gap-0.5">
+                    <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">Total {c}</span>
+                    <span className="text-xl font-bold text-slate-800">{formatMoney(totals[c], c)}</span>
+                  </div>
+                ))}
+              </div>
+            )
+          })()}
+          <ExpensesList
+            items={data}
+            onPay={(item) => setPayTarget(item)}
+            onEdit={(item) => setForm(item)}
+            onDelete={(item) => setConfirm(item)}
+          />
+        </>
       ) : (
         <ExpenseCalendar events={calendar} />
       )}
