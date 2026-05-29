@@ -47,6 +47,7 @@ export default function ExpensesPage() {
     setSaving(true)
     try {
       await pay(payTarget.id, payForm)
+      await fetchAccounts()
       setPayTarget(null)
       setPayForm(PAY_EMPTY)
     } catch { /* ignore */ }
